@@ -7,8 +7,12 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 app.use(express.json());
 
+//API Endpoints
 app.use('/users', userRoutes);
+app.use('/songs', userRoutes);
 
+
+//Khởi động server
 app.listen(PORT, () => {
     console.log(`Server đang chạy tại http://localhost:${PORT}`);
 });

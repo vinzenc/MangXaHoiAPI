@@ -78,9 +78,6 @@ export const deleteUser = async (req, res) => {
     }
 };
 
-// Nhớ import thêm hàm updateUser từ Model nhé
-// import { getAllUsers, createUser, deleteUser, updateUser } from '../models/userModel.js';
-
 export const editUser = async (req, res) => {
     try {
         const { id } = req.params; // 1. Lấy ID từ URL (Sửa ai?)

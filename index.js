@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 
 //API Endpoints
-app.use('/users', userRoutes);
+app.use('/api/users', userRoutes);
 
 
 //Server chạy backend

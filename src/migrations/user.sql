@@ -8,4 +8,5 @@ Create table users (
     created_at timestamp default current_timestamp
 );
 -- 2. Tài khoản admin mặc định
-Insert into users (name, email, password, role) values ('Admin', 'admin@example.com', 'admin123', 'admin');
+INSERT INTO users (name, email, password, role) VALUES 
+('Admin', 'admin@example.com', '$2b$10$0oT7l9oQhU6q7m5aob9ACu2pmVBhiS46DPFP8pJRYs8hDWnpjVZUG', 'admin')

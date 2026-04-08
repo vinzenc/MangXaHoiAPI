@@ -51,7 +51,7 @@ export const getUserByEmail = async (email) => {
 };
 
 //Đăng ký người dùng mới
-export const register = async (name,email,hashPassword) => {
+export const registerUser = async (name,email,hashPassword) => {
     const [result] = await pool.query("INSERT INTO users (name,email,password) VALUES (?,?,?)", [name,email,hashPassword]);
     return result.insertId;
 };

@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { getUserByEmail } from '../models/userModel.js';
+import { getUserByEmail, registerUser } from '../models/userModel.js';
 import { sendResetEmail } from '../config/mailer.js';
 import pool from '../config/db.js';
 const JWT_SECRET = process.env.JWT_SECRET || 'jwt_secet_key_musicapp';
@@ -22,7 +22,7 @@ export const register = async (req,res) => {
             });
         }
         const hashPassword = await bcrypt.hash(password,10);
-        const newUserId = await register(name, email, hashPassword);
+        const newUserId = await registerUser(name, email, hashPassword);
         res.status(201).json({
             success: true,
             message: "Đăng ký thành công",

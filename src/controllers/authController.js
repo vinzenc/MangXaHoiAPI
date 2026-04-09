@@ -14,7 +14,6 @@ export const register = async (req,res) => {
                 message: "Vui lòng điền đầy đủ thông tin"
             });
         }
-        
         const emalExist = await getUserByEmail(email);
         if(emalExist) {
             return res.status(400).json({
@@ -44,7 +43,6 @@ export const login = async (req,res) => {
                 message: "Email hoặc mật khẩu không đúng"
             });
         }
-
         const isMatch = await bcrypt.compare(password, user.password);
         if(!isMatch) {
             return res.status(400).json({
@@ -52,7 +50,6 @@ export const login = async (req,res) => {
                 message: "Email hoặc mật khẩu không đúng"
             });
         }
-
         const token = jwt.sign({id: user.id, role: user.role}, JWT_SECRET, {expiresIn: '1h'});
         res.status(200).json({
             success: true,
@@ -75,20 +72,16 @@ export const forgotPassword = async(req, res) => {
     try {
         const { email } = req.body;
         const user = await getUserByEmail(email);
-
-        if (!user) return res.status(404).json({ 
-            success: false, 
-            message: "Email không tồn tại!" 
+        if (!user) return res.status(404).json({
+            success: false,
+            message: "Email không tồn tại!"
         });
-
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const expiresAt = new Date(Date.now() + 15 * 60000); 
-
+        const expiresAt = new Date(Date.now() + 15 * 60000);
         await pool.query(
-            "UPDATE users SET reset_otp = ?, reset_otp_expires = ? WHERE email = ?", 
+            "UPDATE users SET reset_otp = ?, reset_otp_expires = ? WHERE email = ?",
             [otp, expiresAt, email]
         );
-
         await sendResetEmail(email, otp);
         res.json({ success: true, message: "Mã OTP đã được gửi đến email của bạn!" });
     } catch (error) {
@@ -104,22 +97,17 @@ export const forgotPassword = async(req, res) => {
 export const resetPassword = async(req, res) => {
     try {
         const { email, otp, newPassword } = req.body;
-
         const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
         const user = rows[0];
-
         if (!user) return res.status(404).json({ message: "Tài khoản không tồn tại!" });
-
         if (user.reset_otp !== otp) {
             return res.status(400).json({ message: "Mã OTP không chính xác!" });
         }
         if (new Date() > new Date(user.reset_otp_expires)) {
             return res.status(400).json({ message: "Mã OTP đã hết hạn!" });
         }
-
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
-
         await pool.query(
             "UPDATE users SET password = ?, reset_otp = NULL, reset_otp_expires = NULL WHERE email = ?",
             [hashedPassword, email]

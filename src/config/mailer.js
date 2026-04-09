@@ -5,7 +5,7 @@ const tranporter = nodemailer.createTransport(
         service: 'gmail',
         auth:{
             user: 'musicapp278@gmail.com',
-            pass: 'rrae bwqy rxpn dppc'
+            pass: 'pvhs oqto imjf svpz'
         }
     }
 );

@@ -42,6 +42,7 @@ export const login = async (req,res) => {
                 success: false,
                 message: "Email hoặc mật khẩu không đúng"
             });
+            console.log("Lỗi đăng nhập: Email không tồn tại");
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if(!isMatch) {
@@ -49,8 +50,9 @@ export const login = async (req,res) => {
                 success: false,
                 message: "Email hoặc mật khẩu không đúng"
             });
+            console.log("Lỗi đăng nhập: Mật khẩu không đúng");
         }
-        const token = jwt.sign({id: user.id, role: user.role}, JWT_SECRET, {expiresIn: '1h'});
+        const token = await jwt.sign({id: user.id}, JWT_SECRET, {expiresIn: '1h'});
         res.status(200).json({
             success: true,
             message: "Đăng nhập thành công",
@@ -63,7 +65,7 @@ export const login = async (req,res) => {
         });
     } catch (error) {
         console.error("Lỗi đăng nhâp:", error);
-        res.status(500).json({ message: "Lỗi đăng nhập người dùng" });
+        res.status(500).json({ message: "Lỗi đăng nhập người dùng server" });
     }
 };
 

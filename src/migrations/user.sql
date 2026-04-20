@@ -1,4 +1,4 @@
--- 1. Tạo bảng users nếu chưa có
+-- 1. Tạo bảng users
 Create table users (
     id Int auto_increment primary key,
     name nvarchar(100) not null,

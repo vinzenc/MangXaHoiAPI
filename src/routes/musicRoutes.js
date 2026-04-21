@@ -50,7 +50,4 @@ router.delete('/history', clearSearchHistory);
 
 router.delete('/history/:keyword', deleteHistoryItem);
 
-
-
-
 export default router

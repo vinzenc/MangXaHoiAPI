@@ -33,10 +33,9 @@ app.get('/', (req, res) => {
 });
 
 // ── API routes
-app.use('/users', adminRoutes);
+app.use('/admin/users', adminRoutes);
 app.use('/auth', authRoutes);
 app.use('/favorite',favoriteRouters);
-app.use('/music', musicRoutes);
 app.use('/api', musicRoutes);
 app.use('/profile', profileRoutes);
 app.use(uploadErrorMiddleware);

@@ -38,6 +38,7 @@ router.post('/songs/upload-cover', uploadCover.single('cover'), uploadCoverOnly)
 
 router.patch('/songs/:id/review', verifyToken, requireModeratorRole, reviewSongByModerator)
 
+
 // Các route cho List và Search (Không cần đăng nhập)
 router.get('/list', getMusicList);
 router.get('/search', searchMusic);

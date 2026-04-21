@@ -1,4 +1,4 @@
-import { checkFavorite, addFavorites, removeFavorites, getFavoritesByUserId } from "../models/favoriteModel.js";
+import { checkFavorite, addFavorite, removeFavorites, getFavoritesByUserId } from "../models/favoriteModel.js";
 
 
 export const favoriteSong = async (req, res) => {
@@ -28,7 +28,7 @@ export const favoriteSong = async (req, res) => {
             }
         }
 
-        const isAdded = await addFavorites(userId, songId);
+        const isAdded = await addFavorite(userId, songId);
         if (isAdded) {
             return res.status(201).json({ 
                 success: true, 

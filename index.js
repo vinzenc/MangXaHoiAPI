@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors'; 
-import userRoutes from './src/routes/userRoutes.js';
+import adminRoutes from './src/routes/adminRoutes.js';
 import authRoutes from './src/routes/authRouters.js';
 import favoriteRouters from './src/routes/favoriteRouters.js';
 import musicRoutes from './src/routes/musicRoutes.js';
@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 });
 
 // ── API routes
-app.use('/users', userRoutes);
+app.use('/users', adminRoutes);
 app.use('/auth', authRoutes);
 app.use('/favorite',favoriteRouters);
 app.use('/music', musicRoutes);

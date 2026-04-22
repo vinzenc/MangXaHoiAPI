@@ -43,10 +43,17 @@ function handleMusicError(res, err, message) {
   return res.status(500).json({ message, error: err.message })
 }
 
-// Lay danh sach bai hat, co the loc theo status duyet.
 export async function getAllSongs(req, res) {
   try {
-    const songs = await getSongs({ status: req.query.status })
+    const isMyUploads = req.originalUrl.includes('/my-uploads')
+    const uploaderId = isMyUploads ? req.user.id : (req.query.uploaderId || null)
+
+    const songs = await getSongs({ 
+      status: req.query.status,
+      uploaderId: uploaderId,
+      page: req.query.page,
+      limit: req.query.limit
+    })
     return res.json(songs)
   } catch (err) {
     return handleMusicError(res, err, 'Loi lay danh sach bai hat')
@@ -130,6 +137,7 @@ export async function createSongJson(req, res) {
       approvalStatus: 'pending',
       reviewedByRole: null,
       reviewedAt: null,
+      uploaderId: req.user?.id || null,
     })
 
     const song = await getSongById(songId)
@@ -217,6 +225,7 @@ export async function createSongMultipart(req, res) {
       approvalStatus: 'pending',
       reviewedByRole: null,
       reviewedAt: null,
+      uploaderId: req.user?.id || null,
     })
 
     const song = await getSongById(songId)
@@ -334,7 +343,14 @@ export async function reviewSongByModerator(req, res) {
   }
 
   try {
-    // B2: Ghi ket qua duyet vao DB.
+    // B2: Neu tu choi -> Xoa luon khoi DB de tranh "rac".
+    if (status === 'rejected') {
+      const affectedRows = await removeSong(req.params.id)
+      if (!affectedRows) return res.status(404).json({ message: 'Khong tim thay bai hat de xoa' })
+      return res.json({ message: 'Da tu choi va xoa bai hat thanh cong' })
+    }
+
+    // B2 (Tiep): Neu duyet -> Ghi ket qua vao DB.
     const affectedRows = await reviewSong(req.params.id, status, req.moderatorRole)
     if (!affectedRows) return res.status(404).json({ message: 'Khong tim thay bai hat' })
 

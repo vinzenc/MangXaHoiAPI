@@ -49,7 +49,8 @@ export async function initSongsSchema() {
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
       approvalStatus VARCHAR(20) DEFAULT 'pending',
       reviewedByRole VARCHAR(20) DEFAULT NULL,
-      reviewedAt DATETIME DEFAULT NULL
+      reviewedAt DATETIME DEFAULT NULL,
+      uploaderId INT DEFAULT NULL
     )
   `)
 
@@ -57,10 +58,11 @@ export async function initSongsSchema() {
   await ensureColumnExists('approvalStatus', "VARCHAR(20) DEFAULT 'pending'")
   await ensureColumnExists('reviewedByRole', 'VARCHAR(20) DEFAULT NULL')
   await ensureColumnExists('reviewedAt', 'DATETIME DEFAULT NULL')
+  await ensureColumnExists('uploaderId', 'INT DEFAULT NULL')
 }
 
 // Lay danh sach bai hat, cho phep loc theo trang thai duyet.
-export async function getSongs({ search = '', status = 'approved', page = 1, limit = 20 } = {}) {
+export async function getSongs({ search = '', status = null, page = 1, limit = 20, uploaderId = null } = {}) {
   const db = getPoolOrThrow()
   let whereClause = '1=1'
   const params = []
@@ -76,6 +78,12 @@ export async function getSongs({ search = '', status = 'approved', page = 1, lim
     whereClause += ' AND (title LIKE ? OR artist LIKE ? OR album LIKE ?)'
     const s = `%${search}%`
     params.push(s, s, s)
+  }
+
+  // 3. Lọc theo người upload (isolation cho collaborator)
+  if (uploaderId) {
+    whereClause += ' AND uploaderId = ?'
+    params.push(uploaderId)
   }
 
   // Tính toán phân trang
@@ -112,7 +120,7 @@ export async function createSong(payload) {
   // Ghi ban ghi bai hat moi vao bang songs.
   const db = getPoolOrThrow()
   const [result] = await db.execute(
-    'INSERT INTO songs (title, artist, album, genre, duration, releaseYear, audioUrl, coverUrl, cloudinaryId, approvalStatus, reviewedByRole, reviewedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+    'INSERT INTO songs (title, artist, album, genre, duration, releaseYear, audioUrl, coverUrl, cloudinaryId, approvalStatus, reviewedByRole, reviewedAt, uploaderId) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
     [
       payload.title,
       payload.artist,
@@ -126,6 +134,7 @@ export async function createSong(payload) {
       payload.approvalStatus,
       payload.reviewedByRole,
       payload.reviewedAt,
+      payload.uploaderId || null,
     ],
   )
 

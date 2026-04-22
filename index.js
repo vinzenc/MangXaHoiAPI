@@ -44,8 +44,17 @@ app.use('/history', listenHistoryRoutes);
 app.use(uploadErrorMiddleware);
 
 // Server chạy backend
-app.listen(PORT, () => {
-    console.log(`Server đang chạy tại http://localhost:${PORT}`);
-});
+const startServer = async () => {
+    try {
+        await bootstrapMusicSchema();
+        app.listen(PORT, () => {
+            console.log(`Server đang chạy tại http://localhost:${PORT}`);
+        });
+    } catch (err) {
+        console.error('Loi khi khoi tao server:', err);
+    }
+};
+
+startServer();
 
 

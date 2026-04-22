@@ -4,7 +4,8 @@ import {
     createPlaylist,
     deletePlaylist,
     getSongsByPlaylistId,
-    addSongToPlaylist  
+    addSongToPlaylist,
+    getPlaylistsByUserId  
 } from '../models/playlistModel.js';
 
 export const addPlaylist = async (req, res) => {
@@ -124,7 +125,7 @@ export const getPlaylistSongs = async (req, res) => {
         const { id: userId } = req.user;
         const { playlistId } = req.params;
 
-        const songs = await getSongsByPlaylistIdy(playlistId);
+        const songs = await getSongsByPlaylistId(playlistId);
         return res.status(200).json({
             success: true,
             message: "Lấy danh sách bài hát thành công!",
@@ -136,6 +137,26 @@ export const getPlaylistSongs = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Lỗi hệ thống khi tải danh sách Playlist"
+        });
+    }
+};
+
+export const getUserPlaylists = async (req, res) => {
+    try {
+        const { id: userId } = req.user;
+
+        const playlists = await getPlaylistsByUserId(userId);
+
+        return res.status(200).json({
+            success: true,
+            message: "Lấy danh sách playlist thành công!",
+            data: playlists
+        });
+    } catch (error) {
+        console.error("Lỗi lấy danh sách playlist:", error);
+        res.status(500).json({
+            success: false,
+            message: "Lỗi hệ thống khi tải danh sách playlist"
         });
     }
 };

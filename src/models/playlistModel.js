@@ -41,3 +41,9 @@ export const getSongsByPlaylistId = async (playlistId) => {
     const [rows] = await pool.query(query, [playlistId]);
     return rows;
 };
+
+export const getPlaylistsByUserId = async (userId) => {
+    const query = "SELECT * FROM playlists WHERE user_id = ? ORDER BY created_at DESC";
+    const [rows] = await pool.query(query, [userId]);
+    return rows;
+};

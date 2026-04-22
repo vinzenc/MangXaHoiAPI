@@ -27,14 +27,14 @@ router.get('/songs', getAllSongs)
 router.get('/songs/:id/listen', listenSong)
 router.get('/songs/:id', getSingleSong)
 
-router.post('/songs', createSongJson)
-router.put('/songs/:id', updateSongJson)
-router.delete('/songs/:id', removeSong)
+router.post('/songs', verifyToken, createSongJson)
+router.put('/songs/:id', verifyToken, updateSongJson)
+router.delete('/songs/:id', verifyToken, removeSong)
 
-router.post('/songs/multipart', uploadSongFiles, createSongMultipart)
-router.put('/songs/:id/multipart', uploadSongFiles, updateSongMultipart)
-router.post('/songs/upload', uploadAudio.single('audio'), uploadAudioOnly)
-router.post('/songs/upload-cover', uploadCover.single('cover'), uploadCoverOnly)
+router.post('/songs/multipart', verifyToken, uploadSongFiles, createSongMultipart)
+router.put('/songs/:id/multipart', verifyToken, uploadSongFiles, updateSongMultipart)
+router.post('/songs/upload', verifyToken, uploadAudio.single('audio'), uploadAudioOnly)
+router.post('/songs/upload-cover', verifyToken, uploadCover.single('cover'), uploadCoverOnly)
 
 router.patch('/songs/:id/review', verifyToken, requireModeratorRole, reviewSongByModerator)
 
@@ -42,6 +42,7 @@ router.patch('/songs/:id/review', verifyToken, requireModeratorRole, reviewSongB
 // Các route cho List và Search (Không cần đăng nhập)
 router.get('/list', getMusicList);
 router.get('/search', searchMusic);
+router.get('/my-uploads', verifyToken, getAllSongs); // CTV xem nhạc của mình
 
 //router lay lich su tim kiem
 router.get('/history', getSearchHistory); 

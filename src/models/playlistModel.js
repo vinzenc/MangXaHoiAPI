@@ -1,7 +1,7 @@
 import pool from "../config/db.js";
 
 export const checkPlaylist = async (useId, playlistName) => {
-    const query = "SELECT * id FROM playlists WHERE user_id = ? AND playlist_name = ?";
+    const query = "SELECT id FROM playlists WHERE user_id = ? AND playlist_name = ?";
     const [rows] = await pool.query(query,[useId, playlistName]);
     return rows.length > 0;  
 };

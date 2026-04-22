@@ -78,7 +78,7 @@ export async function listenSong(req, res) {
     }
 
     // B3: Chan truong hop link de quy ve chinh endpoint listen.
-    const selfListenPath = `/api/songs/${song.id}/listen`
+    const selfListenPath = `/music/songs/${song.id}/listen`
     if (sourceAudioUrl.includes(selfListenPath)) {
       return res.status(400).json({ message: 'Nguon audio khong hop le' })
     }
